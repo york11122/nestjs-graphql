@@ -2,39 +2,107 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Press {
+type Local {
+  account: String!
+  password: String!
+}
+
+type Line {
+  _id: String!
+  token: String!
+  name: String!
+  email: String!
+}
+
+type Facebook {
+  _id: String!
+  token: String!
+  name: String!
+  email: String!
+}
+
+type Google {
+  _id: String!
+  token: String!
+  name: String!
+  email: String!
+}
+
+type User {
   id: ID!
-  title: String!
-  context: String!
+  local: Local
+  line: Line
+  facebook: Facebook
+  google: Google
+  name: String!
+  avatar: String!
+  type: UserType!
   createdAt: Date!
   updatedAt: Date!
+}
+
+enum UserType {
+  BASIC
+  ADMIN
 }
 
 """Date custom scalar type"""
 scalar Date
 
+"""當前用戶資料"""
+type UserResponse {
+  """長度為10"""
+  name: String!
+
+  """長度為10"""
+  type: UserType!
+
+  """長度為10"""
+  createdAt: Date!
+
+  """長度為10"""
+  updatedAt: Date!
+}
+
+type LoginResponse {
+  accessToken: String!
+  refreshToken: String!
+}
+
 type Query {
-  allPress: [Press!]!
-  getPress(id: String!): Press!
+  """Current user infomation【need login access-token】"""
+  me: UserResponse!
 }
 
 type Mutation {
-  createPress(input: CreatePressInput!): Press!
-  updatePress(input: UpdatePressInput!): Press!
-  deletePress(input: DeletePressInput!): Boolean!
+  createUser(input: createUserInput!): User!
+
+  """帳號登入"""
+  login(input: loginUserInput!): LoginResponse!
+
+  """Line登入, 未註冊則自動建立帳號"""
+  oauthLine(token: String!): LoginResponse!
+
+  """Faceboook登入, 未註冊則自動建立帳號"""
+  oauthFacebook(token: String!): LoginResponse!
+
+  """google登入, 未註冊則自動建立帳號"""
+  oauthGoogle(token: String!): LoginResponse!
 }
 
-input CreatePressInput {
-  title: String!
-  context: String!
+"""建立帳號參數"""
+input createUserInput {
+  """帳號, 格式為5~10字元"""
+  account: String!
+
+  """長度為10"""
+  password: String!
+
+  """長度為10"""
+  name: String!
 }
 
-input UpdatePressInput {
-  id: ID!
-  title: String!
-  context: String!
-}
-
-input DeletePressInput {
-  id: ID!
+input loginUserInput {
+  account: String!
+  password: String!
 }

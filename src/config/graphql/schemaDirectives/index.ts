@@ -1,7 +1,8 @@
 import UpperCaseDirective from './upper.directive'
-import AuthDirective from './auth.directive'
+import PermissionDirective from './permission.directive'
+import DeprecatedDirective from "./deprecated.directive";
 
 export default {
     upper: UpperCaseDirective,
-    authenticated: AuthDirective
+    permission: PermissionDirective,
 }

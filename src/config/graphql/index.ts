@@ -6,12 +6,16 @@ import { MemcachedCache } from 'apollo-server-cache-memcached'
 import { END_POINT, NODE_ENV, GRAPHQL_DEPTH_LIMIT } from '@environment'
 import * as depthLimit from 'graphql-depth-limit'
 import { join } from 'path';
-
-
+import { ACCESS_TOKEN } from "@environment";
+import { verifyToken } from "@utils/auth/jwt";
+import { UserService } from "@core/user/user.service"
+import { awaitWrap } from "@common";
 @Injectable()
 export class GraphqlService implements GqlOptionsFactory {
+    constructor(private readonly userService: UserService) { }
     async createGqlOptions (): Promise<GqlModuleOptions> {
         return {
+            fieldResolverEnhancers: ['guards'],
             autoSchemaFile: join(process.cwd(), 'src/typeDefs/schema.gql'),
             resolverValidationOptions: {
                 requireResolversForResolveType: false
@@ -40,7 +44,7 @@ export class GraphqlService implements GqlOptionsFactory {
                 // 	}
                 // ]
             },
-            tracing: NODE_ENV !== 'production',
+            // tracing: NODE_ENV !== 'production',
             cacheControl: NODE_ENV === 'production' && {
                 defaultMaxAge: 5,
                 stripFormattedExtensions: false,
@@ -66,10 +70,6 @@ export class GraphqlService implements GqlOptionsFactory {
                 return {
                     req,
                     res,
-                    trackErrors (errors) {
-                        // Track the errors
-                        // console.log(errors)
-                    }
                 }
             },
             formatError: error => {

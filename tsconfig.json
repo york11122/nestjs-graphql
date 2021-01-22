@@ -8,14 +8,15 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": "src",
     "incremental": true,
     "paths": {
       "@common": ["common"],
-      "@core":["core"],
+      "@core/*":["core/*"],
       "@config/*":["config/*"],
       "@schemaDirectives":["config/graphql/schemaDirectives"],
-      "@environment":["environment"]
+      "@environment":["environment"],
+      "@utils/*":["utils/*"]
 		}
   },
   "exclude": ["node_modules", "dist"]

@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
-import { PressModule } from './core/press/press.module';
 import { TypeOrmService } from '@config/typeorm'
 import { GraphqlService } from '@config/graphql'
+import { UserModule } from './core/user/user.module';
+import { AuthModule } from './core/auth/auth.module';
 
 @Module({
   imports: [
@@ -13,9 +14,11 @@ import { GraphqlService } from '@config/graphql'
       useClass: TypeOrmService
     }),
     GraphQLModule.forRootAsync({
+      imports: [UserModule],
       useClass: GraphqlService
     }),
-    PressModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
