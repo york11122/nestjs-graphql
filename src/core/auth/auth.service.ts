@@ -70,6 +70,7 @@ export class AuthService {
 
         if (info) {
             const { code } = info
+            console.log(info)
             switch (code) {
                 case 'ETIMEDOUT':
                     throw new ApolloError('Failed to reach Line: Try Again')
@@ -154,6 +155,7 @@ export class AuthService {
 
         if (info) {
             const { code } = info
+            console.log(info)
             switch (code) {
                 case 'ETIMEDOUT':
                     throw new ApolloError('Failed to reach Line: Try Again')

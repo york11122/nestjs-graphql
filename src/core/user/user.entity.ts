@@ -121,7 +121,6 @@ export class User {
             this.type = this.type || UserType.BASIC
             this.createdAt = this.createdAt || new Date()
             this.updatedAt = new Date()
-            console.log(this)
         }
     }
 }

@@ -28,27 +28,6 @@ type Google {
   email: String!
 }
 
-type User {
-  id: ID!
-  local: Local
-  line: Line
-  facebook: Facebook
-  google: Google
-  name: String!
-  avatar: String!
-  type: UserType!
-  createdAt: Date!
-  updatedAt: Date!
-}
-
-enum UserType {
-  BASIC
-  ADMIN
-}
-
-"""Date custom scalar type"""
-scalar Date
-
 """當前用戶資料"""
 type UserResponse {
   """長度為10"""
@@ -64,6 +43,14 @@ type UserResponse {
   updatedAt: Date!
 }
 
+enum UserType {
+  BASIC
+  ADMIN
+}
+
+"""Date custom scalar type"""
+scalar Date
+
 type LoginResponse {
   accessToken: String!
   refreshToken: String!
@@ -75,7 +62,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(input: createUserInput!): User!
+  createUser(input: createUserInput!): createUserResponse!
 
   """帳號登入"""
   login(input: loginUserInput!): LoginResponse!
@@ -88,6 +75,14 @@ type Mutation {
 
   """google登入, 未註冊則自動建立帳號"""
   oauthGoogle(token: String!): LoginResponse!
+}
+
+union createUserResponse = UserResponse | createUserError
+
+"""當前用戶資料"""
+type createUserError {
+  """"""
+  message: String!
 }
 
 """建立帳號參數"""

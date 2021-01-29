@@ -12,7 +12,7 @@ import {
 } from 'apollo-server-express'
 
 @Injectable()
-export class GqlAuthGuard extends AuthGuard('jwt') {
+export class JWTAuthGuard extends AuthGuard('jwt') {
 
     constructor(private readonly userService: UserService) {
         super()

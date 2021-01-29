@@ -10,7 +10,6 @@ import * as compression from 'compression'
 import * as helmet from 'helmet'
 import * as rateLimit from 'express-rate-limit'
 import { join } from 'path'
-
 import {
   NODE_ENV,
   DOMAIN,
@@ -39,9 +38,11 @@ async function bootstrap () {
   app.useGlobalInterceptors(new LoggingInterceptor())
   app.useGlobalInterceptors(new TimeoutInterceptor())
 
+
   // addon
   app.use(compression())
   app.use(bodyParser.json({ limit: '50mb' }))
+
 
   app.use(
     bodyParser.urlencoded({

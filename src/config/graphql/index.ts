@@ -1,15 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { GqlOptionsFactory, GqlModuleOptions } from '@nestjs/graphql'
-import { AuthenticationError } from 'apollo-server-core'
+import { AuthenticationError, ForbiddenError } from 'apollo-server-core'
 import schemaDirectives from '@schemaDirectives'
 import { MemcachedCache } from 'apollo-server-cache-memcached'
 import { END_POINT, NODE_ENV, GRAPHQL_DEPTH_LIMIT } from '@environment'
 import * as depthLimit from 'graphql-depth-limit'
 import { join } from 'path';
-import { ACCESS_TOKEN } from "@environment";
-import { verifyToken } from "@utils/auth/jwt";
 import { UserService } from "@core/user/user.service"
-import { awaitWrap } from "@common";
+
 @Injectable()
 export class GraphqlService implements GqlOptionsFactory {
     constructor(private readonly userService: UserService) { }
@@ -17,6 +15,7 @@ export class GraphqlService implements GqlOptionsFactory {
         return {
             fieldResolverEnhancers: ['guards'],
             autoSchemaFile: join(process.cwd(), 'src/typeDefs/schema.gql'),
+
             resolverValidationOptions: {
                 requireResolversForResolveType: false
             },

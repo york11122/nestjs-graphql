@@ -12,6 +12,7 @@ class PermissionDirective extends SchemaDirectiveVisitor {
 
         field.resolve = async function (...args) {
             let result = await resolve.apply(this, args)
+            console.log('pem')
             const { currentUser } = args[2]
             if (!currentUser) {
                 throw new AuthenticationError(

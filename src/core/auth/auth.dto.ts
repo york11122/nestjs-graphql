@@ -1,6 +1,6 @@
 import { ObjectType, Field, InputType, Directive } from '@nestjs/graphql'
 import { MinLength, MaxLength } from 'class-validator'
-
+import { UserResponse } from '@core/user/user.dto'
 @InputType()
 export class loginUserInput {
     @Field()

@@ -7,7 +7,6 @@ import { TypeOrmService } from '@config/typeorm'
 import { GraphqlService } from '@config/graphql'
 import { UserModule } from './core/user/user.module';
 import { AuthModule } from './core/auth/auth.module';
-
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({

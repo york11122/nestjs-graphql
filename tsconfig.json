@@ -16,7 +16,8 @@
       "@config/*":["config/*"],
       "@schemaDirectives":["config/graphql/schemaDirectives"],
       "@environment":["environment"],
-      "@utils/*":["utils/*"]
+      "@utils/*":["utils/*"],
+      "@fieldMiddleware/*":["config/graphql/fieldMiddleware/*"]
 		}
   },
   "exclude": ["node_modules", "dist"]
