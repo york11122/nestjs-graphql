@@ -2,6 +2,8 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 const PRIMARY_COLOR: string = process.env.PRIMARY_COLOR || '#87e8de'
+// author
+const AUTHOR: string = process.env.AUTHOR || 'yorkchen'
 
 // bcrypt
 const BCRYPT_SALT: number = +process.env.BCRYPT_SALT || 10
@@ -37,9 +39,9 @@ const RESETPASS_TOKEN: string = process.env.RESETPASS_TOKEN || 'resetpass-token'
 const RESETPASS_TOKEN_SECRET: string =
     process.env.RESETPASS_TOKEN_SECRET || 'resetpass-token-key'
 
-// // nodemailer
-// const NODEMAILER_USER: string = process.env.NODEMAILER_USER || 'xxx'
-// const NODEMAILER_PASS: string = process.env.NODEMAILER_PASS || 'xxx'
+// nodemailer
+const NODEMAILER_USER: string = process.env.NODEMAILER_USER || 'xxx'
+const NODEMAILER_PASS: string = process.env.NODEMAILER_PASS || 'xxx'
 
 // // cloudinary
 // const CLOUDINARY_NAME: string = process.env.CLOUDINARY_NAME || 'chnirt'
@@ -94,5 +96,8 @@ export {
     FACEBOOK_APP_ID,
     FACEBOOK_APP_SECRET,
     LINE_CHANNEL_ID,
-    LINE_CHANNEL_SECRET
+    LINE_CHANNEL_SECRET,
+    NODEMAILER_PASS,
+    NODEMAILER_USER,
+    AUTHOR
 }

@@ -9,37 +9,35 @@ type Local {
 
 type Line {
   _id: String!
-  token: String!
   name: String!
-  email: String!
 }
 
 type Facebook {
   _id: String!
-  token: String!
   name: String!
   email: String!
 }
 
 type Google {
   _id: String!
-  token: String!
   name: String!
   email: String!
 }
 
 """當前用戶資料"""
 type UserResponse {
-  """長度為10"""
+  """用戶名稱"""
   name: String!
 
-  """長度為10"""
+  """用戶類別"""
   type: UserType!
 
-  """長度為10"""
-  createdAt: Date!
+  """用戶頭像"""
+  isVerified: Boolean!
 
-  """長度為10"""
+  """用戶頭像"""
+  avatar: String!
+  createdAt: Date!
   updatedAt: Date!
 }
 
@@ -51,11 +49,6 @@ enum UserType {
 """Date custom scalar type"""
 scalar Date
 
-type LoginResponse {
-  accessToken: String!
-  refreshToken: String!
-}
-
 type Query {
   """Current user infomation【need login access-token】"""
   me: UserResponse!
@@ -63,6 +56,8 @@ type Query {
 
 type Mutation {
   createUser(input: createUserInput!): createUserResponse!
+  verifyEmail(token: String!): verifyEmailResponse!
+  resetPassword(input: resetPasswordInput!): resetPasswordResponse!
 
   """帳號登入"""
   login(input: loginUserInput!): LoginResponse!
@@ -75,13 +70,15 @@ type Mutation {
 
   """google登入, 未註冊則自動建立帳號"""
   oauthGoogle(token: String!): LoginResponse!
+  sendVerifyEmail(input: sendEmailInput!): sendEmailResponse!
+  sendForgetPasswordEmail(input: sendEmailInput!): sendEmailResponse!
 }
 
 union createUserResponse = UserResponse | createUserError
 
-"""當前用戶資料"""
+"""建立帳號異常"""
 type createUserError {
-  """"""
+  """異常訊息"""
   message: String!
 }
 
@@ -97,7 +94,57 @@ input createUserInput {
   name: String!
 }
 
+union verifyEmailResponse = UserResponse | verifyEmailError
+
+"""驗證Email異常"""
+type verifyEmailError {
+  """異常訊息"""
+  message: String!
+}
+
+union resetPasswordResponse = UserResponse | resetPasswordError
+
+"""重設密碼異常"""
+type resetPasswordError {
+  """異常訊息"""
+  message: String!
+}
+
+"""重設密碼參數"""
+input resetPasswordInput {
+  """長度為10"""
+  newPassword: String!
+
+  """長度為10"""
+  token: String!
+}
+
+union LoginResponse = AuthTokens | LoginError
+
+type AuthTokens {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type LoginError {
+  message: String!
+}
+
 input loginUserInput {
   account: String!
   password: String!
+}
+
+union sendEmailResponse = EmailResponse | sendEmailError
+
+type EmailResponse {
+  email: String!
+}
+
+type sendEmailError {
+  message: String!
+}
+
+input sendEmailInput {
+  email: String!
 }

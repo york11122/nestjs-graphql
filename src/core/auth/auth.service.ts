@@ -23,7 +23,7 @@ export class AuthService {
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }
 
     //一般登入
-    public async login (account: string, password: string): Promise<LoginResponse> {
+    public async login (account: string, password: string): Promise<typeof LoginResponse> {
         let user = await this.userRepository.findOne({
             where: {
                 'local.account': account
@@ -34,11 +34,11 @@ export class AuthService {
             return await tradeToken(user)
         }
 
-        throw new AuthenticationError('Login failed.')
+        return { message: "Login failed." }
     }
 
     //Line
-    public async oauthLine (req: Request, res: Response): Promise<LoginResponse> {
+    public async oauthLine (req: Request, res: Response): Promise<typeof LoginResponse> {
 
         const { data, info } = await authenticateLine(req, res)
         if (data) {
@@ -58,10 +58,9 @@ export class AuthService {
                         line: {
                             _id: profile.id,
                             name: profile.displayName,
-                            email: profile.email ? profile.email : ''
                         },
                         name: profile.displayName,
-                        avatar: profile.pictureUrl
+                        avatar: profile.pictureUrl,
                     })
                 )
             }
@@ -70,18 +69,17 @@ export class AuthService {
 
         if (info) {
             const { code } = info
-            console.log(info)
             switch (code) {
                 case 'ETIMEDOUT':
-                    throw new ApolloError('Failed to reach Line: Try Again')
+                    return { message: 'Failed to reach Line: Try Again' }
                 default:
-                    throw new ApolloError('Something went wrong')
+                    return { message: 'Something went wrong.' }
             }
         }
     }
 
     //facebook
-    public async oauthFacebook (req: Request, res: Response): Promise<LoginResponse> {
+    public async oauthFacebook (req: Request, res: Response): Promise<typeof LoginResponse> {
 
         const { data, info } = await authenticateFacebook(req, res)
         if (data) {
@@ -104,7 +102,8 @@ export class AuthService {
                             email: profile.emails[0].value
                         },
                         name: profile.name.givenName + profile.name.familyName,
-                        avatar: profile.photos[0].value
+                        avatar: profile.photos[0].value,
+                        email: profile.emails[0].value
                     })
                 )
             }
@@ -115,15 +114,15 @@ export class AuthService {
             const { code } = info
             switch (code) {
                 case 'ETIMEDOUT':
-                    throw new ApolloError('Failed to reach Line: Try Again')
+                    return { message: 'Failed to reach Facebook: Try Again' }
                 default:
-                    throw new ApolloError('Something went wrong')
+                    return { message: 'Something went wrong.' }
             }
         }
     }
 
     //Google
-    public async oauthGoogle (req: Request, res: Response): Promise<LoginResponse> {
+    public async oauthGoogle (req: Request, res: Response): Promise<typeof LoginResponse> {
 
         const { data, info } = await authenticateGoogle(req, res)
         if (data) {
@@ -135,7 +134,6 @@ export class AuthService {
                     'google._id': profile.id
                 }
             })
-            console.log(profile)
             if (!user) {
                 // add create User
                 user = await this.userRepository.save(
@@ -146,7 +144,8 @@ export class AuthService {
                             email: profile.emails[0].value
                         },
                         name: profile.name.givenName + profile.name.familyName,
-                        avatar: profile.photos ? profile.photos[0].value : ''
+                        avatar: profile.photos ? profile.photos[0].value : '',
+                        email: profile.emails[0].value
                     })
                 )
             }
@@ -155,12 +154,11 @@ export class AuthService {
 
         if (info) {
             const { code } = info
-            console.log(info)
             switch (code) {
                 case 'ETIMEDOUT':
-                    throw new ApolloError('Failed to reach Line: Try Again')
+                    return { message: 'Failed to reach Google: Try Again' }
                 default:
-                    throw new ApolloError('Something went wrong')
+                    return { message: 'Something went wrong.' }
             }
         }
     }

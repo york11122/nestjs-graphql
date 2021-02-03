@@ -1,7 +1,7 @@
 import { sign, verify } from 'jsonwebtoken'
 import { User } from '@core/user/user.entity'
-import { LoginResponse } from '@core/auth/auth.dto'
-import { AuthenticationError } from 'apollo-server-core'
+import { AuthTokens } from '@core/auth/auth.dto'
+import { AuthenticationError, ApolloError } from 'apollo-server-core'
 import {
     ISSUER,
     ACCESS_TOKEN_SECRET,
@@ -45,16 +45,18 @@ const common = {
 
 export const generateToken = async (
     user: User,
-    type: TokenType
+    type: TokenType,
+    email?: string,
 ): Promise<string> => {
     return await sign(
         {
-            _id: user.id
+            _id: user._id,
+            email: email ? email : ""
         },
         common[type].privateKey,
         {
             issuer: ISSUER!,
-            subject: user.id.toString(),
+            subject: user._id.toString(),
             algorithm: 'HS256',
             expiresIn: common[type].signOptions.expiresIn // 15m
         }
@@ -67,15 +69,20 @@ export const verifyToken = async (
 ): Promise<any> => {
     return await verify(token, common[type].privateKey, async (err, data) => {
         if (err) {
-            throw new AuthenticationError(
-                'Authentication token is invalid, please try againw.'
-            )
+            if (type === 'accessToken' || type === "refreshToken") {
+                throw new AuthenticationError(
+                    'Invalid token.'
+                )
+            }
+            else {
+                throw new ApolloError('Invalid token.', "INVALID_MAIL_TOKEN")
+            }
         }
         return data
     })
 }
 
-export const tradeToken = async (user: User): Promise<LoginResponse> => {
+export const tradeToken = async (user: User): Promise<AuthTokens> => {
     // if (!user.isVerified) {
     //     throw new ForbiddenError('Please verify your email.')
     // }

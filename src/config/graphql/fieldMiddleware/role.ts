@@ -16,7 +16,7 @@ export const roleMiddleware: FieldMiddleware = async (
     if (currentUser.type !== extensions.type) {
         throw new ForbiddenError(
             `User does not have sufficient permissions to access "${info.fieldName}" field.`,
-        );
+        )
     }
     return next();
-};
+}

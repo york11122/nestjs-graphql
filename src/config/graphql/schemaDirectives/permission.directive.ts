@@ -12,15 +12,16 @@ class PermissionDirective extends SchemaDirectiveVisitor {
 
         field.resolve = async function (...args) {
             let result = await resolve.apply(this, args)
-            console.log('pem')
             const { currentUser } = args[2]
             if (!currentUser) {
                 throw new AuthenticationError(
-                    'Authentication token is invalid, please try again.'
+                    'Invalid token.'
                 )
             }
             if (currentUser.type !== type) {
-                throw new ForbiddenError(`You are not authorized for ${field.name}`)
+                throw new ForbiddenError(
+                    `User does not have sufficient permissions to access "${field.name}" field.`
+                )
             }
 
             return result

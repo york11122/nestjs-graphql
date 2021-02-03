@@ -29,14 +29,13 @@ export class JWTAuthGuard extends AuthGuard('jwt') {
         const token = req.headers[ACCESS_TOKEN] as string || '';
         let data = await verifyToken(token, 'accessToken')
         let currentUser = await this.userService.findUserByID(data._id)
-
         if (currentUser) {
             ctx.getContext().currentUser = currentUser;
             return true;
         }
 
         throw new AuthenticationError(
-            'Authentication token is invalid, please try again.'
+            'Invalid token.'
         )
     }
 }

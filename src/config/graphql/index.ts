@@ -72,6 +72,13 @@ export class GraphqlService implements GqlOptionsFactory {
                 }
             },
             formatError: error => {
+                if (error.originalError instanceof AuthenticationError) {
+                    error.message = `Authentication Error: ${error.message}`
+                }
+
+                if (error.originalError instanceof ForbiddenError) {
+                    error.message = `Authorization Error: ${error.message}`
+                }
                 return {
                     message: error.message,
                     code: error.extensions && error.extensions.code,

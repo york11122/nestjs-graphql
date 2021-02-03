@@ -8,13 +8,13 @@ export class AuthResolver {
     constructor(private readonly authService: AuthService) { }
 
     @Mutation(() => LoginResponse, { description: "帳號登入" })
-    async login (@Args('input') input: loginUserInput): Promise<LoginResponse> {
+    async login (@Args('input') input: loginUserInput): Promise<typeof LoginResponse> {
         let { account, password } = input
         return await this.authService.login(account, password)
     }
 
     @Mutation(() => LoginResponse, { description: "Line登入, 未註冊則自動建立帳號" })
-    async oauthLine (@Args('token') token: string, @Context() context: any): Promise<LoginResponse> {
+    async oauthLine (@Args('token') token: string, @Context() context: any): Promise<typeof LoginResponse> {
         const { req, res } = context
         req.body = {
             ...req.body,
@@ -24,7 +24,7 @@ export class AuthResolver {
     }
 
     @Mutation(() => LoginResponse, { description: "Faceboook登入, 未註冊則自動建立帳號" })
-    async oauthFacebook (@Args('token') token: string, @Context() context: any): Promise<LoginResponse> {
+    async oauthFacebook (@Args('token') token: string, @Context() context: any): Promise<typeof LoginResponse> {
         const { req, res } = context
         req.body = {
             ...req.body,
@@ -34,7 +34,7 @@ export class AuthResolver {
     }
 
     @Mutation(() => LoginResponse, { description: "google登入, 未註冊則自動建立帳號" })
-    async oauthGoogle (@Args('token') token: string, @Context() context: any): Promise<LoginResponse> {
+    async oauthGoogle (@Args('token') token: string, @Context() context: any): Promise<typeof LoginResponse> {
         const { req, res } = context
         req.body = {
             ...req.body,
